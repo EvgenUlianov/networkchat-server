@@ -67,13 +67,13 @@ public class UserChannelInput extends  Thread{
         user.setAlive(false);
         if (threadOutput != null)
             threadOutput.interrupt();
-        if (channel != null) {
-            try {
-                channel.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+//        if (channel != null) {
+//            try {
+//                channel.close();
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 }
