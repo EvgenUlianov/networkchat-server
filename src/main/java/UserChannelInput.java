@@ -14,9 +14,9 @@ import java.nio.charset.StandardCharsets;
 @Data
 public class UserChannelInput extends  Thread{
     private final User user;
-    private SocketChannel channel;
+    private final SocketChannel channel;
     private static final String EXIT_COMMAND = "/exit";
-    private Thread threadOutput;
+    private final Thread threadOutput;
 
     public UserChannelInput(SocketChannel channel, Thread threadOutput, User user) {
         super(String.format("%s: input", user.getName()));
@@ -32,10 +32,10 @@ public class UserChannelInput extends  Thread{
 
         Chat chat = Chat.get();
 
-        while (channel.isConnected()) {
+        try (channel;) {
 
             //  читаем данные из канала в буфер
-            try {
+            while (channel.isConnected()) {
 
                 int bytesCount = 0;
                 while (bytesCount <= 0) {
@@ -49,16 +49,17 @@ public class UserChannelInput extends  Thread{
                     break;
                 }
                 chat.addMessage(user, text);
-            } catch (SocketException e) {
-                chat.addMessage(User.ADMIN, String.format("%s has a trouble: %s",user.getName(),  e.getMessage()));
-                log.error(e.getMessage(), e);
-                break;
-            } catch (IOException e) {
-                log.error(e.getMessage(), e);
-                e.printStackTrace();
-                break;
             }
+        } catch (SocketException e) {
+            chat.addMessage(User.ADMIN, String.format("%s has a trouble: %s",user.getName(),  e.getMessage()));
+            log.error(e.getMessage(), e);
+//                break;
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+            e.printStackTrace();
+//                break;
         }
+
         closeChannel();
     }
 
@@ -69,6 +70,7 @@ public class UserChannelInput extends  Thread{
         if (channel != null) {
             try {
                 channel.close();
+
             } catch (IOException e) {
                 e.printStackTrace();
             }

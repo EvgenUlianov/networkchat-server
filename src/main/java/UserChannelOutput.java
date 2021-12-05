@@ -15,7 +15,7 @@ import java.util.Queue;
 public class UserChannelOutput
         extends  Thread{
     private final User user;
-    private SocketChannel channel;
+    private final SocketChannel channel;
 
     public UserChannelOutput(SocketChannel channel, User user) {
         super(String.format("%s: input", user.getName()));
@@ -58,18 +58,10 @@ public class UserChannelOutput
                             e.printStackTrace();
                         }
                     }
-
                 }
-                if (needToBreak)
-                    break;
+                if (needToBreak)  break;
 
             }
-
-
-
-
         }
-
-
     }
 }
